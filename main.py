@@ -1,6 +1,6 @@
 #!/opt/homebrew/bin/python3
 
-## Get Me is intended to print somee relevant info to the console
+## Get Me is intended to print some relevant info to the console
 
 import sys
 import os
