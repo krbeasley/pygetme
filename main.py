@@ -2,10 +2,9 @@
 
 ## Get Me is intended to print some relevant info to the console
 
-import sys
-import os
 import subprocess
 import socket
+import argparse
 
 GIGABYTE = 1024 * 1024 * 1024
 
@@ -53,8 +52,22 @@ def getBootTime() :
 
     return int(boot)
 
-if __name__ == "__main__" :
+def printAll():
     clear()
+
+    print(f"USER: {USER}    MACHINE: {MACHINE}    LEAKED IP: {IP}")
+    print(f"CPU: {CPU_NAME}    CORES: {CPU_CORES}    RAM: {RAM_AMT} GB")
+    print(f"UPTIME: {UPTIME}")
+
+
+if __name__ == "__main__" :
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--ip_address', help='Show only the internal IP address.', action=argparse.BooleanOptionalAction)
+    parser.add_argument('-u', '--user', help='Show only the current user.', action=argparse.BooleanOptionalAction)
+    parser.add_argument('-t', '--uptime', help='Show the machine\'s uptime', action=argparse.BooleanOptionalAction)
+
+    # parse arguments
+    args = parser.parse_args()
 
     # get user
     USER = subprocess.getoutput('whoami')
@@ -77,8 +90,15 @@ if __name__ == "__main__" :
     BOOT = getBootTime()
     UPTIME = displayTime(NOW - BOOT, 4)
 
-
     # echo it all out
-    print(f"USER: {USER}    MACHINE: {MACHINE}    LEAKED IP: {IP}")
-    print(f"CPU: {CPU_NAME}    CORES: {CPU_CORES}    RAM: {RAM_AMT} GB")
-    print(f"UPTIME: {UPTIME}")
+    if args.ip_address is None and args.user is None and args.uptime is None:
+        printAll()
+    else:
+        if args.ip_address is not None:
+            print(f"IP Address: {IP}")
+
+        if args.user is not None:
+            print(f"User: {USER}")
+
+        if args.uptime is not None:
+            print(f"Uptime: {UPTIME}")
